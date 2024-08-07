@@ -1,0 +1,140 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Performance{% endblock title %}
+
+{% block content %}
+<h1>Performance Home</h1>
+<!--   HR   -->
+{% if is_hr %}
+<h2>All Employees</h2>
+<div class="row mb-3">
+    {% if request.user.is_superuser %}
+    <div class="col-md-4 mb-2">
+        <form method="get" action="">
+            <div class="input-group">
+                <select class="form-select" name="department">
+                    <option value="" {% if not request.GET.department %}selected{% endif %}>Select Department</option>
+                    {% for dept in departments %}
+                        <option value="{{ dept.id }}" {% if dept.id|stringformat:"s" == request.GET.department %}selected{% endif %}>{{ dept.name }}</option>
+                    {% endfor %}
+                </select>
+                <button class="btn btn-outline-secondary" type="submit">Search</button>
+            </div>
+        </form>
+    </div>
+    {% endif %}
+    <div class="col-md-4 mb-2">
+        <form method="get" action="">
+            <div class="input-group">
+                <select class="form-select" name="position">
+                    <option value="" {% if not request.GET.position %}selected{% endif %}>Select Position</option>
+                    {% for pos in positions %}
+                        <option value="{{ pos.id }}" {% if pos.id|stringformat:"s" == request.GET.position %}selected{% endif %}>{{ pos.title }}</option>
+                    {% endfor %}
+                </select>
+                <button class="btn btn-outline-secondary" type="submit">Search</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-4 mb-2">
+        <form method="get" action="">
+            <div class="input-group">
+                <input type="text" class="form-control" name="search_name" placeholder="Search by name" value="{{ request.GET.search_name }}">
+                <button class="btn btn-outline-secondary" type="submit">Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+    <table class='table table-striped'>
+        <thead>
+            <tr>
+                <th>Employee Name</th>
+                <th>Position</th>
+                <th>Goal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for employee in employees %}
+            <tr>
+                <td>{{ employee.user.first_name }} {{ employee.user.last_name }}</td> 
+                <td>{{ employee.position.title }}</td>
+                <td><a href="{% url 'view_employee_goals' employee.id %}" class="btn btn-outline-primary">View Goal</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!--   Manager   -->
+{% elif is_manager %}
+    <h2>Department Employees</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Approve Goal</th>
+                <th>Rate Goal</th>
+                <th>Functional Areas</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for employee in employees %}
+            <tr>
+                <td>{{ employee.user.first_name }} {{ employee.user.last_name }}</td>
+                <td>{{ employee.position.title }}</td>
+                <td><a href="{% url 'approve_goals' employee.id%}" class="btn btn-outline-primary">Approve Goals</a></td>
+                <td><a href="{% url 'rate_goals' employee.id %}" class="btn btn-outline-light">Rate Goals</a></td>
+                <td><a href="{% url 'rate_functional_areas' employee.id %}" class="btn btn-outline-light">Rate Performance</a></td>
+
+            </tr>
+        {% endfor %}
+    </table>
+
+    <!--   Employee   -->
+{% elif is_employee %}
+<div class="container mt-4">
+    <h2>Your Goals</h2>
+    {% if goals %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Goal Title</th>
+                    <th scope="col">Approved</th>
+                    <th scope="col">Rated</th>
+                    <th scope="col">Ratings</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for goal in goals %}
+                    <tr>
+                        <td>{{ goal.title }}</td>
+                        <td>{{ goal.is_approved|yesno:"Yes,No" }}</td>
+                        <td>{{ goal.ratings.exists|yesno:"Yes,No" }}</td>
+                        <td>
+                            {% if goal.ratings.exists %}
+                                <ul class="list-unstyled">
+                                    {% for rating in goal.ratings.all %}
+                                        <li>
+                                            <strong>Rating:</strong> {{ rating.rating }}<br>
+                                            <strong>Comments:</strong> {{ rating.comments }}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                Not Rated
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info" role="alert">
+            You have not set any goals yet.
+        </div>
+    {% endif %}
+    <a href="{% url 'set_goals' %}" class="btn btn-primary mt-3">Set New Goal</a>
+</div>
+{% endif %}
+
+{% endblock content %}
+

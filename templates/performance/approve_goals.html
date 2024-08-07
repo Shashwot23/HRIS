@@ -1,0 +1,44 @@
+<!-- performance/templates/performance/approve_goals.html -->
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Approve Goals for {{ employee.user.first_name }} {{ employee.user.last_name }}</h1>
+    {% if goals %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Goal Title</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Approval Status</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for goal in goals %}
+                    <tr>
+                        <td>{{ goal.title }}</td>
+                        <td>{{ goal.description }}</td>
+                        <td>{{ goal.is_approved|yesno:"Approved,Not Approved" }}</td>
+                        <td>
+                            <form method="post" class="form-inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="goal_id" value="{{ goal.id }}">
+                                {% if not goal.is_approved %}
+                                    <button type="submit" class="btn btn-outline-primary btn-sm">Approve</button>
+                                {% else %}
+                                    <p class="text-success">Goal Approved</p>
+                                {% endif %}
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info" role="alert">
+            Employee has not set any goal.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

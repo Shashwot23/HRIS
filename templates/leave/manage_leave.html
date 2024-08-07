@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manage Leave Requests</title>
+</head>
+<body>
+    <h1>Manage Leave Requests</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Employee</th>
+                <th>Leave Type</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in leave_requests %}
+                <tr>
+                    <td>{{ request.employee }}</td>
+                    <td>{{ request.leave_type }}</td>
+                    <td>{{ request.start_date }}</td>
+                    <td>{{ request.end_date }}</td>
+                    <td>{{ request.status }}</td>
+                    <td>
+                        <a href="{% url 'approve_leave_request' request.pk %}">Approve</a>
+                        <a href="{% url 'reject_leave_request' request.pk %}">Reject</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

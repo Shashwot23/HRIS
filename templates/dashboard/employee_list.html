@@ -1,0 +1,87 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Employees{% endblock title %}
+
+
+{% block content %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1>Employees List</h1>
+        {% if request.user.is_superuser %}
+        <a href='{% url "employee_signup" %}'>
+            <button type="button" class="btn btn-outline-primary">Add Employee</button>
+        </a>
+        {% endif %}
+    </div>
+    
+    <!-- Search Filters -->
+    <div class="row mb-3">
+        {% if request.user.is_superuser %}
+        <div class="col-md-4 mb-2">
+            <form method="get" action="">
+                <div class="input-group">
+                    <select class="form-select" name="department">
+                        <option value="" {% if not request.GET.department %}selected{% endif %}>Select Department</option>
+                        {% for dept in departments %}
+                            <option value="{{ dept.id }}" {% if dept.id|stringformat:"s" == request.GET.department %}selected{% endif %}>{{ dept.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <button class="btn btn-outline-secondary" type="submit">Search</button>
+                </div>
+            </form>
+        </div>
+        {% endif %}
+        <div class="col-md-4 mb-2">
+            <form method="get" action="">
+                <div class="input-group">
+                    <select class="form-select" name="position">
+                        <option value="" {% if not request.GET.position %}selected{% endif %}>Select Position</option>
+                        {% for pos in positions %}
+                            <option value="{{ pos.id }}" {% if pos.id|stringformat:"s" == request.GET.position %}selected{% endif %}>{{ pos.title }}</option>
+                        {% endfor %}
+                    </select>
+                    <button class="btn btn-outline-secondary" type="submit">Search</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-4 mb-2">
+            <form method="get" action="">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="search_name" placeholder="Search by name" value="{{ request.GET.search_name }}">
+                    <button class="btn btn-outline-secondary" type="submit">Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Employee Table -->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Department</th>
+                <th>Position</th>
+                <th>Edit</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for employee in employees %}
+                <tr>
+                    <td>{{ employee.user.first_name }} {{ employee.user.last_name }}</td>
+                    <td>{{ employee.user.email }}</td>
+                    <td>{{ employee.department }}</td>
+                    <td>{{ employee.position }}</td>
+                    <td>
+                        <a href="{% url 'assign_task' employee.id %}" class="btn btn-outline-primary">Assign Task</a>                       
+                        <a href="{% url 'edit_employee' employee.id %}" class="btn btn-outline-light">Edit</a>
+                    </td>           
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5">No employees found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock content %}
+

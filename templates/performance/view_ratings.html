@@ -1,0 +1,25 @@
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+<h2>View Ratings</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Goal</th>
+      <th>Rater</th>
+      <th>Rating</th>
+      <th>Comments</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for rating in ratings %}
+      <tr>
+        <td>{{ rating.goal.title }}</td>
+        <td>{{ rating.rater.username }}</td>
+        <td>{{ rating.rating }}</td>
+        <td>{{ rating.comments }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock content %}

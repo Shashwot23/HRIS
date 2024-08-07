@@ -1,0 +1,155 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %} Calendar {% endblock title %}
+
+{% block extrahead %}
+<link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css' rel='stylesheet' />
+{% endblock extrahead %}
+
+{% block content %}
+<div id='calendar' class="col-md-8 mt-4 mx-auto"></div>
+
+<div class="row">
+    <!-- Upcoming Events and Holidays -->
+    <div class="col-md-10 mx-auto m-4">
+        <div class="card mb-3">
+            <div class="card-header">Upcoming Events</div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Start</th>
+                            <th>End</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for event in events %}
+                            <tr>
+                                <td>{{ event.name }}</td>
+                                <td>{{ event.description }}</td>
+                                <td>{{ event.start }}</td>
+                                <td>{{ event.end }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block extrascripts %}
+<script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js'></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        $(document).ready(function () {
+            var isSuperuser = {{ request.user.is_superuser|yesno:"true,false" }};
+    
+            var calendar = $('#calendar').fullCalendar({
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                events: '{% url "all_events" %}',
+                selectable: isSuperuser,
+                selectHelper: isSuperuser,
+                editable: isSuperuser,
+                eventLimit: true,
+                select: function (start, end, jsEvent, view){
+                    if (!isSuperuser) return;
+                    var title = prompt("Enter Event Title: ");
+                    if (title) {
+                        var description = prompt('Enter Event Description:');
+                        var startFormatted = moment(start).format("YYYY-MM-DD HH:mm:ss");
+                        var endFormatted = moment(end).format("YYYY-MM-DD HH:mm:ss");
+                        $.ajax({
+                            type: "GET",
+                            url: '{% url "add_event" %}',
+                            data: {
+                                'title': title,
+                                'start': startFormatted,
+                                'description': description,
+                                'end': endFormatted
+                            },
+                            dataType: "json",
+                            success: function(data){
+                                calendar.fullCalendar('refetchEvents');
+                                alert("Added Successfully");
+                            },
+                            error: function (xhr, status, error){
+                                alert('There is a problem: ' + error);
+                            }
+                        });
+                    }
+                },
+    
+                eventResize: function (event, delta, revertFunc) {
+                    if (!isSuperuser) {
+                        revertFunc();
+                        return;
+                    }
+                    var start = event.start.format("YYYY-MM-DD HH:mm:ss");
+                    var end = event.end ? event.end.format("YYYY-MM-DD HH:mm:ss") : null;
+                    updateEvent(event, start, end);
+                },
+    
+                eventDrop: function (event, delta, revertFunc) {
+                    if (!isSuperuser) {
+                        revertFunc();
+                        return;
+                    }
+                    var start = event.start.format("YYYY-MM-DD HH:mm:ss");
+                    var end = event.end ? event.end.format("YYYY-MM-DD HH:mm:ss") : null;
+                    updateEvent(event, start, end);
+                },
+    
+                eventClick: function (event) {
+                    if (!isSuperuser) return;
+                    if (confirm("Are you sure you want to remove it?")) {
+                        $.ajax({
+                            type: "GET",
+                            url: '{% url "remove" %}',
+                            data: {'id': event.id},
+                            dataType: "json",
+                            success: function (data) {
+                                calendar.fullCalendar('refetchEvents');
+                                alert('Event Removed');
+                            },
+                            error: function (xhr, status, error) {
+                                alert('There is a problem: ' + error);
+                            }
+                        });
+                    }
+                },
+            });
+    
+            function updateEvent(event, start, end) {
+                $.ajax({
+                    type: "GET",
+                    url: '{% url "update" %}',
+                    data: {
+                        'title': event.title,
+                        'description': event.description,
+                        'start': start,
+                        'end': end,
+                        'id': event.id
+                    },
+                    dataType: "json",
+                    success: function(data){
+                        calendar.fullCalendar('refetchEvents');
+                        alert('Event Updated');
+                    },
+                    error: function(xhr, status, error){
+                        alert('There is a problem: ' + error);
+                    }
+                });
+            }
+        });
+    });
+    </script>
+{% endblock extrascripts %}

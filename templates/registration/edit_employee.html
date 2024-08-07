@@ -1,0 +1,93 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Edit Employee{% endblock title %}
+
+{% block content %}
+<h2 class="my-4">Edit Employee</h2>
+<form method="post" class="needs-validation" novalidate>
+    {% csrf_token %}
+    <div class="form-group mb-3">
+        <label for="id_username" class="form-label">Username</label>
+        <input type="text" name="username" id="id_username" value="{{ form.username.value }}" class="form-control" required>
+        <div class="invalid-feedback">
+            Please enter the username.
+        </div>
+    </div>
+    <div class="form-group mb-3">
+        <label for="id_first_name" class="form-label">First Name</label>
+        <input type="text" name="first_name" id="id_first_name" value="{{ form.first_name.value }}" class="form-control" required>
+        <div class="invalid-feedback">
+            Please enter the first name.
+        </div>
+    </div>
+    <div class="form-group mb-3">
+        <label for="id_last_name" class="form-label">Last Name</label>
+        <input type="text" name="last_name" id="id_last_name" value="{{ form.last_name.value }}" class="form-control" required>
+        <div class="invalid-feedback">
+            Please enter the last name.
+        </div>
+    </div>
+    <div class="form-group mb-3">
+        <label for="id_email" class="form-label">Email</label>
+        <input type="email" name="email" id="id_email" value="{{ form.email.value }}" class="form-control" required>
+        <div class="invalid-feedback">
+            Please enter a valid email address.
+        </div>
+    </div>
+    <div class="form-group mb-3">
+        <label for="id_department" class="form-label">Department</label>
+        <select name="department" id="id_department" class="form-control" required>
+            {% for dept in form.department.field.queryset %}
+                <option value="{{ dept.id }}" {% if dept.id == form.department.value %}selected{% endif %}>{{ dept.name }}</option>
+            {% endfor %}
+        </select>
+        <div class="invalid-feedback">
+            Please select a department.
+        </div>
+    </div>
+    <div class="form-group mb-3">
+        <label for="id_position" class="form-label">Position</label>
+        <select name="position" id="id_position" class="form-control" required>
+            {% for pos in form.position.field.queryset %}
+                <option value="{{ pos.id }}" {% if pos.id == form.position.value %}selected{% endif %}>{{ pos.name }}</option>
+            {% endfor %}
+        </select>
+        <div class="invalid-feedback">
+            Please select a position.
+        </div>
+    </div>
+    <div class="form-group mb-3">
+        <label for="id_date_of_birth" class="form-label">Date of Birth</label>
+        <input type="date" name="date_of_birth" id="id_date_of_birth" value="{{ form.date_of_birth.value }}" class="form-control">
+    </div>
+    <div class="form-group mb-3">
+        <label for="id_phone_number" class="form-label">Phone Number</label>
+        <input type="text" name="phone_number" id="id_phone_number" value="{{ form.phone_number.value }}" class="form-control">
+    </div>
+    <div class="form-group mb-3">
+        <label for="id_address" class="form-label">Address</label>
+        <textarea name="address" id="id_address" class="form-control">{{ form.address.value }}</textarea>
+    </div>
+    <div class="mb-5">
+        <button type="submit" class="btn btn-outline-primary">Save changes</button>
+        <button type="submit" name="delete" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this employee?');">Delete</button>
+    </div>
+</form>
+
+<script>
+    (function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
+{% endblock content %}

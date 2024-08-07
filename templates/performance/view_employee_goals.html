@@ -1,0 +1,65 @@
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+    <h1>Goals for {{ employee.user.first_name }} {{ employee.user.last_name }}</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Goal Title</th>
+                <th>Description</th>
+                <th scope="col">Rater</th>
+                <th>Ratings</th>
+                <th>Manager Comment</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for goal in goals %}
+                <tr>
+                    <td>{{ goal.title }}</td>
+                    <td>{{ goal.description }}</td>
+                    
+                        <ul>
+                            {% for rating in goal.ratings.all %}
+                                <td>{{ rating.rater.username}}</td>
+                                <td>Rating: {{ rating.rating }}/5</td>
+                                <td>{{ rating.comments}}</td>
+                            {% endfor %}
+                        </ul>
+                    
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="container mt-5">
+        <h2>Functional Area Ratings for {{ employee.user.first_name }} {{ employee.user.last_name }}</h2>
+        {% if performance %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Functional Area</th>
+                        <th scope="col">Rater</th>
+                        <th scope="col">Rating</th>
+                        <th scope="col">Comments</th>
+                        <th scope="col">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rating in performance %}
+                        <tr>
+                            <td>{{ rating.functional_area.name }}</td>
+                            <td>{{ rating.rater.username }}</td>
+                            <td>{{ rating.rating }}</td>
+                            <td>{{ rating.comments }}</td>
+                            <td>{{ rating.created_at }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="alert alert-info" role="alert">                
+                    No functional area ratings available.              
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

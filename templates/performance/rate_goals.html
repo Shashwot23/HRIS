@@ -1,0 +1,30 @@
+<!-- performance/templates/performance/rate_goals.html -->
+{% extends "dashboard/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Rate Goals for {{ employee.user.first_name }} {{ employee.user.last_name }}</h2>
+    {% if goals %}
+    <div class="list-group">
+        {% for goal in goals %}
+            <div class="list-group-item mb-3">
+                <h1 class="mb-1">{{ goal.title }}</h1>
+                <p class="mb-3">{{ goal.description }}</p>
+                <form method="post" class="form-inline">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <input type="hidden" name="goal_id" value="{{ goal.id }}">
+                    <button type="submit" class="btn btn-primary">Rate</button>
+                </form>
+            </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info" role="alert">
+      Employee's Goal is not approved.
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

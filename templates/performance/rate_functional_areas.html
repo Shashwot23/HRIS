@@ -1,0 +1,45 @@
+<!-- performance/templates/performance/rate_functional_areas.html -->
+{% extends "dashboard/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Rate Functional Areas for {{ employee.user.first_name }} {{ employee.user.last_name }}</h2>
+    {% if functional_areas %}
+        <form method="post">
+            {% csrf_token %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Functional Area</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Rating</th>
+                        <th scope="col">Comments</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for area in functional_areas %}
+                        <tr>
+                            <td>{{ area.name }}</td>
+                            <td>{{ area.description }}</td>
+                            <td>
+                                <select name="ratings" class="form-control">
+                                    {% for i in "12345" %}
+                                        <option value="{{ i }}">{{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td><textarea name="comments" class="form-control"></textarea></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <button type="submit" class="btn btn-primary">Submit Ratings</button>
+        </form>
+    {% else %}
+        <div class="alert alert-info" role="alert">
+            No functional areas defined.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
