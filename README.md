@@ -8,7 +8,7 @@ The Human Resource Management System (HRIS) is a web-based application developed
    - A centralized dashboard providing an overview of the HR activities.
    - Displays key metrics such as the number of employees, upcoming events, pending leave requests, and recent announcements.
    - Quick access to various modules of the HRIS.
-   - ![dashboard](https://photos.google.com/search/_tra_/photo/AF1QipPqxOOCspX_I21WARalNlt7WOk2t8Wf5PmpW3XP)
+   - ![dashboard](https://imgur.com/a/gvDP7QK)
 
 ### 2. **Employment Management**
    - Manage employee profiles with detailed information like personal details, job titles, department, salary, etc.
