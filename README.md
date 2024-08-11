@@ -8,13 +8,13 @@ The Human Resource Management System (HRIS) is a web-based application developed
    - A centralized dashboard providing an overview of the HR activities.
    - Displays key metrics such as the number of employees, upcoming events, pending leave requests, and recent announcements.
    - Quick access to various modules of the HRIS.
-   - ![dashboard](https://i.imgur.com/LoWjJU6.png)
+     ![dashboard](https://i.imgur.com/LoWjJU6.png)
 
 ### 2. **Employment Management**
    - Manage employee profiles with detailed information like personal details, job titles, department, salary, etc.
    - Easily add, update, or remove employee records.
    - Search and filter employees based on various criteria.
-   - ![employment management](https://photos.google.com/search/_tra_/photo/AF1QipPk0yDsrjDgfZSQhE7UazW8y9UZjnV5URfWVh2I)
+     ![employment management](https://i.imgur.com/EHaMbFA.png)
 
 ### 3. **Announcements**
    - Post company-wide announcements to keep everyone informed.
@@ -24,14 +24,14 @@ The Human Resource Management System (HRIS) is a web-based application developed
    - Schedule and manage company events.
    - View all upcoming events in a calendar format.
    - Send reminders and notifications to employees regarding events.
-   - ![calendar](https://photos.google.com/search/_tra_/photo/AF1QipPNMMSfNgA8-_DCraMxpi9PWkC8concfil_GR5U)
+     ![calendar](https://i.imgur.com/KxdyWLQ.png)
 
 ### 5. **Performance Appraisal**
    - Conduct and track employee performance reviews.
    - Set appraisal criteria and evaluate employees based on these metrics.
    - Generate performance reports and provide feedback to employees.
-   - ![performance](https://photos.google.com/search/_tra_/photo/AF1QipPP7Gv1n7z9ZpOuOlCtcgxQLqysNRbYDGUR8YN6)
-   - ![performance](https://photos.google.com/search/_tra_/photo/AF1QipOgi0vnuZdwqJfC7AN_NUQ0oy9oetxBrB16zZpZ)
+    ![performance](https://i.imgur.com/urQieO3.png)
+    ![performance](https://i.imgur.com/xKo5KGJ.png)
 
 ### 6. **Leave Management**
    - Manage employee leave requests with ease.
